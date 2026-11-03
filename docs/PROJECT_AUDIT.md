@@ -14,6 +14,23 @@ the current application. The repository documentation explicitly specifies
 MongoDB. This audit preserves MongoDB and does not introduce a second
 database or claim a MySQL implementation.
 
+## Original MySQL requirement differences
+
+| Original requirement                                             | Current implementation                                                                                                                                                                            |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Axios for frontend HTTP requests                                 | The shared API client uses the browser's native `fetch`; Axios is not a dependency.                                                                                                               |
+| MySQL as the production and development database                 | MongoDB through Mongoose. No MySQL driver, connection, or server configuration exists.                                                                                                            |
+| Relational SQL schema in `database/schema.sql`                   | No SQL schema. User and course documents are declared in `backend/models/User.js` and `backend/models/Course.js`.                                                                                 |
+| SQL seed script in `database/seed.sql`                           | No SQL seed file. Optional sample courses are inserted by `backend/database/seed.js` into MongoDB.                                                                                                |
+| SQL migrations under `database/migrations/`                      | No SQL migration system or migration files.                                                                                                                                                       |
+| Relational tables, foreign keys, joins, and cascades             | Users and courses are MongoDB collections. Enrollments are embedded in user documents; lessons and quiz questions are embedded in course documents and reference validation is application-level. |
+| SQL constraints and indexes                                      | Mongoose schema validation is used; email is marked unique. There are no foreign keys or relational constraints. Existing production index creation has not been verified.                        |
+| SQL transaction consistency and duplicate-enrollment constraints | No transaction is used. Enrollment is checked in application code. Course deletion and removal of user enrollment references are separate parallel operations.                                    |
+| Persist quiz attempts/results and certificates                   | Only the best quiz score is stored on the enrollment. Individual attempts and certificate records are not implemented.                                                                            |
+| Jest/Supertest, Vitest/Testing Library, and Playwright coverage  | Backend tests use Node's built-in runner and `fetch`; there is no configured frontend component or browser test framework.                                                                        |
+| Managed hosted MySQL in production                               | No production database is provisioned. The deployment guide is prepared for MongoDB Atlas, not MySQL.                                                                                             |
+| SQL injection and parameterized-query verification               | No SQL queries exist in this codebase. MongoDB query inputs and Mongoose operations are used instead; SQL injection tests do not apply.                                                           |
+
 ## Architecture and data
 
 - `frontend/`: React 18 and Vite application, React Router, shared API client,
@@ -47,7 +64,7 @@ quiz answer keys.
 The following are not implemented in the inspected code and should not be
 presented as available:
 
-- MySQL schema, migrations, or a MySQL connection.
+- MySQL schema, migrations, or a MySQL connection; see the comparison above.
 - Course category management endpoints; categories are course text fields.
 - Reviews/ratings, certificates, payment/revenue processing, or notifications.
 - File upload support or upload middleware.
@@ -61,6 +78,22 @@ Public registration creates student accounts. Promoting an account to an
 instructor or administrator currently requires a trusted direct database
 update.
 
+## Original endpoint requirements not implemented
+
+The original MySQL-oriented brief listed additional routes. The implemented
+routes are enumerated earlier in this report and in
+[API_DOCUMENTATION.md](./API_DOCUMENTATION.md). In particular:
+
+- The requested `GET /api/my-courses` is instead `GET /api/courses/mine`.
+- No `POST /api/courses/:id/reviews` route exists.
+- No instructor dashboard, student-list, or analytics routes exist.
+- No admin user-management or course-management/approval routes exist beyond
+  `GET /api/admin/dashboard`.
+- Certificate, file-download, and resource-upload routes do not exist.
+- No separate `GET /api/quizzes/:courseId` route exists; quiz questions are
+  included in course details without answer keys and are submitted to
+  `POST /api/quizzes/:courseId/submit`.
+
 ## Security and reliability notes
 
 - Authentication passwords are hashed with bcrypt; JWTs are stored in an
@@ -68,9 +101,11 @@ update.
 - Helmet, a configured CORS origin, request-body size limits, and rate
   limiting on authentication routes are enabled.
 - The security review found an unsafe lesson video URL rendering issue. The
-  current worktree validates HTTPS URLs in the Mongoose lesson schema and
-  before rendering lesson links; details and the regression test are in
-  [SECURITY_AUDIT.md](./SECURITY_AUDIT.md).
+  issue is fixed: the Mongoose lesson schema validates HTTPS URLs and the
+  frontend validates before rendering lesson links. Details and regression
+  coverage are in [SECURITY_AUDIT.md](./SECURITY_AUDIT.md).
+- JWT logout clears the browser cookie but does not revoke a copied token;
+  stateless tokens can remain valid until their seven-day expiry.
 - The database cleanup after course deletion and user enrollment updates are
   separate operations, not a transaction. No transactional behavior is
   claimed.
@@ -80,9 +115,10 @@ update.
 - No local `.env`, configured `MONGODB_URI`, or production database connection
   is available in this environment. The backend requires MongoDB and a
   `JWT_SECRET` to start.
-- Vercel/Render configuration is preparation only. No verified hosting
-  deployment or live demo URL is available; the README correctly says it is
-  not deployed.
+- Vercel/Render configuration is preparation only. The API hostname in
+  `vercel.json` must be checked against the actual Render-assigned hostname
+  before frontend deployment. No verified hosting deployment or live demo URL
+  is available.
 - The existing test suite does not connect to MongoDB. Full authentication,
   persistence, and deployment smoke tests therefore remain outstanding.
 - A GitHub Actions workflow now runs formatting, backend tests, and the

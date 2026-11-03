@@ -10,9 +10,9 @@ authorization behavior could not be tested.
 
 ## Finding
 
-| #   | Severity  | File                                   | Lines | Vulnerability                                                                                               | Confidence | Status                        |
-| --- | --------- | -------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------- |
-| 1   | 🟡 MEDIUM | `frontend/src/pages/CourseDetails.jsx` | 191   | An instructor-supplied lesson video URL could use a `javascript:` scheme and be rendered as an active link. | 9/10       | Fixed in the current worktree |
+| #   | Severity  | File                                   | Lines | Vulnerability                                                                                               | Confidence | Status                    |
+| --- | --------- | -------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------- | ---------- | ------------------------- |
+| 1   | 🟡 MEDIUM | `frontend/src/pages/CourseDetails.jsx` | 191   | An instructor-supplied lesson video URL could use a `javascript:` scheme and be rendered as an active link. | 9/10       | Fixed in commit `d3f379d` |
 
 ### Remediation
 
@@ -43,8 +43,11 @@ frontend production build are listed in [TESTING_REPORT.md](./TESTING_REPORT.md)
 
 - No live database or deployment was available for end-to-end security
   verification.
-- No dynamic scanner, dependency audit beyond the checks documented in the
-  testing report, or penetration test was run as part of this review.
+- Logout clears the cookie in the current browser but has no server-side JWT
+  revocation mechanism. A copied token can remain usable until its seven-day
+  expiry; this is a residual limitation, not a verified critical/high finding.
+- `npm audit --audit-level=high` reported 0 known dependency vulnerabilities
+  in the current lockfile. No dynamic scanner or penetration test was run.
 - Deployment security still depends on setting a strong `JWT_SECRET`, using
   HTTPS, and configuring the exact production client origin and restricted
   MongoDB credentials.

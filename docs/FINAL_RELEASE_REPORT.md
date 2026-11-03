@@ -1,32 +1,95 @@
-# LearnHub final release report
+# LearnHub final audit and release report
 
-## Release status: not deployed
+## Release status
 
-The source is prepared for deployment, but there is no verified public
-frontend or API URL. The Vercel and Render configuration files do not create
-provider accounts or supply MongoDB credentials. The README therefore
-continues to say that the live demo is not deployed; no unverified URL is
-published as a demo.
+**Not deployed; not production-ready.** Vercel, Render, and MongoDB Atlas have
+not been provisioned for this project. There is no verified frontend URL, API
+URL, or production database connection. The README intentionally contains no
+demo URL.
 
-## Verification
+## Completed
 
-The checks run for this release attempt are recorded in
-[TESTING_REPORT.md](./TESTING_REPORT.md). They cover formatting, the existing
-backend unit tests, and the frontend production build. They do not establish
-database-backed or deployed behavior.
+- Preserved the existing React, Express, MongoDB/Mongoose implementation.
+- Documented the original MySQL requirements and differences without adding
+  MySQL or changing/deleting database data in
+  [PROJECT_AUDIT.md](./PROJECT_AUDIT.md).
+- Documented current API routes, incomplete features, security limitations,
+  configuration gaps, and release blockers.
+- Fixed the reviewed medium-risk lesson video URL issue by validating HTTPS
+  URLs in the Mongoose lesson schema and before rendering a link.
+- Added a regression test for unsafe and valid lesson video URLs.
+- Updated the deployment guide to require the actual Render-assigned hostname
+  and clearly mark the checked-in Vercel rewrite hostname as an unverified
+  placeholder.
+- Updated the README with current stack, local setup, environment variables,
+  checks, deployment status, and known limitations.
+- Added/retained CI for formatting, backend tests, and frontend production
+  build.
+- Pushed the previous audit and security fix to
+  [GitHub](https://github.com/Anji0522/learnhub-lms), commit `d3f379d`.
 
-## Outstanding release requirements
+## Test results
 
-1. Provide/configure a MongoDB Atlas database URI and a strong production
-   `JWT_SECRET` in the hosting provider's secret settings.
-2. Connect the repository to Vercel and Render, set the exact client origin,
-   and confirm the API rewrite points to the assigned Render hostname.
-3. Verify both deployed services, then test registration, login, course
-   creation/enrollment, lesson progress, quizzes, and role restrictions
-   against the live database.
-4. Add the actual verified frontend deployment URL to the README.
-5. Decide whether the unimplemented features in
-   [PROJECT_AUDIT.md](./PROJECT_AUDIT.md) are release requirements.
+See [TESTING_REPORT.md](./TESTING_REPORT.md) for case-level outcomes.
 
-The current database remains MongoDB to honor the existing MERN application.
-No MySQL migration or deployment is included in this release attempt.
+- Backend suite: **7 passed, 0 failed**.
+- Formatting check: passed after formatting the updated audit documentation.
+- Frontend production build: passed.
+- Backend syntax check: 23 files passed `node --check`.
+- Dependency audit: `npm audit --audit-level=high` reported 0 known
+  vulnerabilities.
+- Vercel JSON syntax check: passed.
+- MongoDB integration and deployment smoke tests: not run; required services
+  are unavailable.
+- ESLint and frontend component tests: not configured.
+
+## Security findings and limitations
+
+- Medium: unsafe instructor-supplied lesson video URL could render as an active
+  link. **Fixed** in the source and regression-tested.
+- No critical or high-priority issue was identified in the reviewed paths.
+  This is a bounded source review, not a penetration test or a claim that the
+  whole application is secure.
+- Stateless logout clears the local cookie but does not revoke a copied JWT;
+  that token can remain valid until its seven-day expiration.
+- No live configuration, production database security setup, or deployed
+  behavior was verified.
+- See [SECURITY_AUDIT.md](./SECURITY_AUDIT.md).
+
+## Pending
+
+- Add MongoDB-backed integration tests for registration/login, ownership,
+  enrollment, progress, quizzes, and admin behaviors.
+- Decide whether missing roadmap features (reviews, certificates, uploads,
+  course approvals, category management, instructor student/analytics APIs,
+  admin user management, and pagination) are required.
+- Consider server-side JWT revocation if immediate invalidation after logout
+  becomes a product/security requirement.
+- Confirm GitHub Actions passes for the documentation update commit.
+
+## Blocked
+
+- **Production deploy:** waiting for Vercel and Render projects to be created
+  and linked to this repository.
+- **Database verification:** waiting for a MongoDB Atlas URI and network/user
+  configuration. No MySQL migration is approved or included.
+- **End-to-end verification:** waiting for assigned frontend/API URLs and
+  production secrets to be configured directly with the providers.
+- **README live link:** blocked until a public frontend URL and its API/data
+  workflows have been verified.
+
+Do not share `MONGODB_URI` or `JWT_SECRET` in chat or commit them. Configure
+them only in the backend hosting provider's secret settings.
+
+## Deployment provider details
+
+- Intended frontend: Vercel; not provisioned.
+- Intended API: Render; not provisioned.
+- Intended database: MongoDB Atlas; not provisioned.
+- Live website URL: none verified.
+- Backend API URL: none verified.
+- Repository: <https://github.com/Anji0522/learnhub-lms>.
+
+The Render Blueprint and Vercel configuration are preparation only. Before
+deploying the frontend, update the Vercel `/api` rewrite to the actual Render
+hostname; then set Render's `CLIENT_ORIGIN` to the actual Vercel origin.
