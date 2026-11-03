@@ -23,6 +23,9 @@ demo URL.
   placeholder.
 - Updated the README with current stack, local setup, environment variables,
   checks, deployment status, and known limitations.
+- Improved frontend API diagnostics and added a catalog retry action. Topic
+  filters now reflect published course categories, and URL search terms stay
+  synchronized with the search field.
 - Added/retained CI for formatting, backend tests, and frontend production
   build.
 - GitHub Actions passed for documentation commit `c603bc3`
@@ -35,7 +38,7 @@ demo URL.
 See [TESTING_REPORT.md](./TESTING_REPORT.md) for case-level outcomes.
 
 - Backend suite: **7 passed, 0 failed**.
-- Formatting check: passed after formatting the updated audit documentation.
+- Formatting check: passed after formatting the updated source and reports.
 - Frontend production build: passed.
 - Backend syntax check: 23 files passed `node --check`.
 - Dependency audit: `npm audit --audit-level=high` reported 0 known
@@ -43,6 +46,9 @@ See [TESTING_REPORT.md](./TESTING_REPORT.md) for case-level outcomes.
 - Vercel JSON syntax check: passed.
 - MongoDB integration and deployment smoke tests: not run; required services
   are unavailable.
+- Browser check confirmed the catalog displays API/DB troubleshooting after
+  the proxy returns HTTP 500 and that retry issues another request. A
+  `search=writing` URL populated the catalog search input.
 - ESLint and frontend component tests: not configured.
 
 ## Security findings and limitations

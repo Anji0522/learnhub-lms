@@ -119,6 +119,11 @@ routes are enumerated earlier in this report and in
   `vercel.json` must be checked against the actual Render-assigned hostname
   before frontend deployment. No verified hosting deployment or live demo URL
   is available.
+- The local frontend is listening, but the configured API port (5000) and
+  MongoDB port (27017) have no listeners; no MongoDB executable/service,
+  `.env`, `MONGODB_URI`, or `JWT_SECRET` is configured. Backend startup was
+  attempted and stopped at its explicit missing-`JWT_SECRET` check. Course
+  search can only return records from the API and does not provide mock data.
 - The existing test suite does not connect to MongoDB. Full authentication,
   persistence, and deployment smoke tests therefore remain outstanding.
 - A GitHub Actions workflow now runs formatting, backend tests, and the

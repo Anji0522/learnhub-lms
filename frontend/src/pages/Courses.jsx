@@ -5,30 +5,59 @@ import CourseCard from "../components/CourseCard.jsx";
 import Loader from "../components/Loader.jsx";
 import { api } from "../services/api.js";
 
-const categories = [
-  "All topics",
-  "Design",
-  "Technology",
-  "Business",
-  "Wellness",
-  "Photography",
-  "Writing",
-];
-
 export default function Courses() {
   const [searchParams] = useSearchParams();
+  const searchParam = searchParams.get("search") || "";
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState("All topics");
-  const [query, setQuery] = useState(() => searchParams.get("search") || "");
+  const [query, setQuery] = useState(searchParam);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [reloadCount, setReloadCount] = useState(0);
 
   useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setError("");
+
     api("/courses")
-      .then(({ courses: items }) => setCourses(items))
-      .catch((reason) => setError(reason.message))
-      .finally(() => setLoading(false));
-  }, []);
+      .then(({ courses: items }) => {
+        if (active) {
+          setCourses(items);
+        }
+      })
+      .catch((reason) => {
+        if (active) {
+          setError(reason.message);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [reloadCount]);
+
+  useEffect(() => {
+    setQuery(searchParam);
+  }, [searchParam]);
+
+  const categories = useMemo(
+    () => [
+      "All topics",
+      ...new Set(
+        courses
+          .map((course) => course.category?.trim())
+          .filter(Boolean)
+          .sort((first, second) => first.localeCompare(second)),
+      ),
+    ],
+    [courses],
+  );
 
   const filtered = useMemo(
     () =>
@@ -96,8 +125,15 @@ export default function Courses() {
       {loading ? (
         <Loader label="Finding your next course" />
       ) : error ? (
-        <div className="empty-note">
-          {error}. Please check the API and database connection.
+        <div className="empty-note" role="alert">
+          <p>{error}</p>
+          <button
+            className="button button-outline"
+            onClick={() => setReloadCount((count) => count + 1)}
+            type="button"
+          >
+            Try again
+          </button>
         </div>
       ) : filtered.length ? (
         <>
@@ -118,7 +154,9 @@ export default function Courses() {
         </>
       ) : (
         <div className="empty-note">
-          Nothing on this shelf just yet. Try another search or topic.
+          {courses.length === 0
+            ? "No published courses are available yet."
+            : "No courses match your search or selected topic."}
         </div>
       )}
     </section>

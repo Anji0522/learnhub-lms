@@ -2,14 +2,18 @@
 
 ## Executed checks
 
-| Check                       | Command                                         | Actual result              |
-| --------------------------- | ----------------------------------------------- | -------------------------- |
-| Backend/API unit tests      | `npm test`                                      | 7 passed, 0 failed         |
-| Formatting                  | `npm run format:check`                          | Passed                     |
-| Frontend production build   | `npm run build`                                 | Passed                     |
-| Backend syntax              | `node --check` for each backend JavaScript file | 23 files passed            |
-| Dependency advisories       | `npm audit --audit-level=high`                  | 0 vulnerabilities reported |
-| Vercel configuration syntax | Parse `vercel.json` as JSON                     | Passed                     |
+| Check                       | Command                                         | Actual result                                                          |
+| --------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------- |
+| Backend/API unit tests      | `npm test`                                      | 7 passed, 0 failed                                                     |
+| Formatting                  | `npm run format:check`                          | Passed                                                                 |
+| Frontend production build   | `npm run build`                                 | Passed                                                                 |
+| Backend syntax              | `node --check` for each backend JavaScript file | 23 files passed                                                        |
+| Dependency advisories       | `npm audit --audit-level=high`                  | 0 vulnerabilities reported                                             |
+| Vercel configuration syntax | Parse `vercel.json` as JSON                     | Passed                                                                 |
+| Local API startup           | `npm run start --workspace backend`             | Failed as expected: `JWT_SECRET` is not configured; no API listener    |
+| Frontend API proxy          | `GET http://localhost:5173/api/courses`         | HTTP 500 because the backend on port 5000 is unavailable               |
+| Catalog error UI            | Open catalog while API proxy is unavailable     | Browser showed API/DB connectivity guidance and a working retry action |
+| Search query state          | Open `/courses?search=writing`                  | Search field displayed `writing`                                       |
 
 The test cases below are the seven tests in the existing Node.js test suite.
 The tests use the in-process Express app and test doubles where noted; none
@@ -26,10 +30,22 @@ requires MongoDB.
 | SEC-001    | Lesson video URL model validation                 | `javascript:` URL is rejected and valid HTTPS URL is accepted    | Unsafe URL validation failed as expected; HTTPS URL validated | PASS   |
 | AUTHZ-001  | Role middleware denies a non-matching/absent role | Return 403 and do not continue                                   | Returned 403 with permission error                            | PASS   |
 | AUTHZ-002  | Role middleware allows a matching role            | Continue to the next handler                                     | `next()` was called                                           | PASS   |
+| UI-001     | Catalog API failure guidance and retry            | Explain API/DB failure and allow a retry                         | Browser displayed HTTP 500 guidance; retry sent a new request | PASS   |
+| UI-002     | Search query deep link                            | Search field reflects the URL's `search` parameter               | `/courses?search=writing` populated the search field          | PASS   |
 
 ## Failed tests and defects
 
 - Failed tests in the executed suite: **0**.
+- The API startup check is not a passing test: startup stopped because the
+  environment has no `JWT_SECRET`. The same environment has no `.env`,
+  configured `MONGODB_URI`, MongoDB executable/service, or listener on port 27017.
+- The frontend proxy check returned HTTP 500 because nothing is listening on
+  the configured backend port. The frontend now reports this explicitly and
+  offers a retry action.
+- Search results and topic filters against actual course documents could not
+  be tested because the backend/database are unavailable. Topic filters now
+  derive from published course data instead of listing categories with no
+  matching courses.
 - `npm audit --audit-level=high` reported 0 dependency vulnerabilities. This
   registry-based audit does not replace a penetration test or prove that
   runtime configuration is secure.

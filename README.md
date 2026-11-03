@@ -76,6 +76,35 @@ detailed requirements comparison.
 The API exits with an explicit error if MongoDB or the required JWT secret is
 not configured; it does not switch to mock persistence.
 
+## Course Search and Sample Courses
+
+Search and topic filters only use published courses returned by the API; the
+frontend does not include sample or mock courses. Topic filters are derived
+from the categories of available courses. A new or empty MongoDB database
+therefore has no search results until published courses are created.
+
+To insert the optional sample courses after the API and MongoDB are configured,
+follow the role promotion and seed instructions in
+[database/README.md](database/README.md). The seed examples include Design,
+Technology, and Writing courses.
+
+## Troubleshooting API Connection
+
+If the frontend reports that it cannot reach the API:
+
+1. Confirm the root `.env` file has a reachable `MONGODB_URI` and a private
+   `JWT_SECRET` of at least 32 characters. Do not share either value in chat.
+2. Start the MongoDB service or verify the Atlas connection and network access.
+3. Restart `npm run dev`; the API must connect to MongoDB before it listens on
+   port 5000. Check the backend terminal for startup errors.
+4. Verify <http://localhost:5000/api/health>, then reload the course catalog.
+
+The development environment used for this check has no `.env`, no configured
+`MONGODB_URI`/`JWT_SECRET`, no MongoDB service or executable, and no listener
+on port 5000. As a result, the frontend can load but course requests cannot
+reach an API. Configure a database locally or in Atlas before expecting search
+topics or courses to appear.
+
 ## Environment Variables
 
 | Variable        | Required            | Purpose                                                                                      |
