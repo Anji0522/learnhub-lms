@@ -22,6 +22,7 @@ The API exits with an explicit error if MongoDB is unavailable; it never falls b
 **Live demo:** Not deployed yet. The [GitHub repository](https://github.com/Anji0522/learnhub-lms) is the source-code link, not a live demo.
 
 To try LearnHub locally, start MongoDB, configure `.env` as described above, and run `npm run dev`.
+Deployment configuration is prepared for Vercel and Render. See the [deployment guide](docs/DEPLOYMENT.md) to connect MongoDB Atlas and publish the app. Once deployed, replace this notice with the verified Vercel URL.
 
 ## Roles
 
