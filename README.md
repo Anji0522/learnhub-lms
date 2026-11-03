@@ -4,10 +4,12 @@
 
 - **Full-stack live demo:** Not deployed. Render and MongoDB Atlas are not
   provisioned for this project yet.
-- **Static curriculum preview:** The deployment workflow publishes the site
-  files and configures GitHub Pages to use `gh-pages` at `/(root)`. The link
-  will be added after the live site is verified. This preview will not include
-  API-backed authentication, courses, or student data.
+- **Static curriculum preview:** The site files are published to the
+  `gh-pages` branch, but the live site is not active yet. In
+  [repository Pages settings](https://github.com/Anji0522/learnhub-lms/settings/pages),
+  select **Deploy from a branch → `gh-pages` → `/(root)`** and save. The link
+  will be added after it is verified. This preview will not include API-backed
+  authentication, courses, or student data.
 - **GitHub:** [Anji0522/learnhub-lms](https://github.com/Anji0522/learnhub-lms)
 
 ## Project Overview
@@ -152,11 +154,14 @@ still browse and search the curriculum.
 
 ## Deployment Status
 
-The static curriculum workflow publishes built files to the `gh-pages` branch
-and configures the repository Pages site to use that branch. The link will be
-added after the site is available and verified. The preview only demonstrates
-the frontend curriculum; API-backed authentication, course management, and
-saved student data require the full-stack deployment.
+The static curriculum workflow publishes built files to the `gh-pages` branch.
+GitHub Pages still returns 404 because a Pages site is not registered for this
+repository. Configure **Settings → Pages → Build and deployment → Source:
+Deploy from a branch → Branch: `gh-pages` → Folder: `/(root)`**, then save.
+The workflow token cannot change this repository setting. The live link will
+be added after it is available and verified. The preview only demonstrates the
+frontend curriculum; API-backed authentication, course management, and saved
+student data require the full-stack deployment.
 
 The full-stack app is not deployed. A MongoDB Atlas URI, Render and Vercel
 provider settings, assigned hosting URLs, and live API smoke tests are still
