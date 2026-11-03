@@ -2,20 +2,20 @@
 
 ## Executed checks
 
-| Check                        | Command                                                                   | Actual result                                                          |
-| ---------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Backend/API unit tests       | `npm test`                                                                | 7 passed, 0 failed                                                     |
-| Static MERN curriculum tests | `npm test`                                                                | 3 passed, 0 failed                                                     |
-| Formatting                   | `npm run format:check`                                                    | Passed                                                                 |
-| Frontend production build    | `npm run build`                                                           | Passed                                                                 |
-| Backend syntax               | `node --check` for each backend JavaScript file                           | 23 files passed                                                        |
-| Dependency advisories        | `npm audit --audit-level=high`                                            | 0 vulnerabilities reported                                             |
-| Vercel configuration syntax  | Parse `vercel.json` as JSON                                               | Passed                                                                 |
-| Local API startup            | `npm run start --workspace backend`                                       | Failed as expected: `JWT_SECRET` is not configured; no API listener    |
-| Frontend API proxy           | `GET http://localhost:5173/api/courses`                                   | HTTP 500 because the backend on port 5000 is unavailable               |
-| Catalog error UI             | Open catalog while API proxy is unavailable                               | Browser showed API/DB connectivity guidance and a working retry action |
-| Search query state           | Open `/courses?search=writing`                                            | Search field displayed `writing`                                       |
-| MERN learning path           | Open `/learn/mern`, navigate modules, run preview, mark a lesson complete | Curriculum loaded; sandbox preview and in-page progress worked         |
+| Check                        | Command                                                                    | Actual result                                                       |
+| ---------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Backend/API unit tests       | `npm test`                                                                 | 7 passed, 0 failed                                                  |
+| Static MERN curriculum tests | `npm test`                                                                 | 3 passed, 0 failed                                                  |
+| Formatting                   | `npm run format:check`                                                     | Passed                                                              |
+| Frontend production build    | `npm run build`                                                            | Passed                                                              |
+| Backend syntax               | `node --check` for each backend JavaScript file                            | 23 files passed                                                     |
+| Dependency advisories        | `npm audit --audit-level=high`                                             | 0 vulnerabilities reported                                          |
+| Vercel configuration syntax  | Parse `vercel.json` as JSON                                                | Passed                                                              |
+| Local API startup            | `npm run start --workspace backend`                                        | Failed as expected: `JWT_SECRET` is not configured; no API listener |
+| Frontend API proxy           | `GET http://localhost:5173/api/courses`                                    | HTTP 500 because the backend on port 5000 is unavailable            |
+| Catalog API fallback         | Open catalog while API proxy is unavailable, then search and open a module | 8 modules shown; Bootstrap search and MongoDB lesson link worked    |
+| Search query state           | Open `/courses?search=writing`                                             | Search field displayed `writing`                                    |
+| MERN learning path           | Open `/learn/mern`, navigate modules, run preview, mark a lesson complete  | Curriculum loaded; sandbox preview and in-page progress worked      |
 
 The backend tests use the in-process Express app and test doubles where noted;
 the curriculum tests validate the static module and lesson data. Neither suite
@@ -23,20 +23,20 @@ requires MongoDB.
 
 ## Executed test cases
 
-| ID             | Test                                              | Expected result                                                  | Actual result                                                 | Status |
-| -------------- | ------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------- | ------ |
-| API-001        | Health endpoint                                   | `GET /api/health` returns 200 with the service status            | Returned 200 with `{ status: "ok", service: "LearnHub API" }` | PASS   |
-| API-002        | Unknown API route                                 | Unknown route returns 404 and a route-not-found message          | Returned 404 with the expected message                        | PASS   |
-| COURSE-001     | Public course list filtering                      | List omits lesson video URLs and quiz answer keys                | Test double returned a course without video URL or quiz data  | PASS   |
-| COURSE-002     | Public course detail filtering                    | Public detail omits lesson video URLs and correct answer indexes | Test double response omitted both fields                      | PASS   |
-| SEC-001        | Lesson video URL model validation                 | `javascript:` URL is rejected and valid HTTPS URL is accepted    | Unsafe URL validation failed as expected; HTTPS URL validated | PASS   |
-| AUTHZ-001      | Role middleware denies a non-matching/absent role | Return 403 and do not continue                                   | Returned 403 with permission error                            | PASS   |
-| AUTHZ-002      | Role middleware allows a matching role            | Continue to the next handler                                     | `next()` was called                                           | PASS   |
-| CURRICULUM-001 | Module order and topic coverage                   | Cover HTML through MongoDB in the intended order                 | All 8 modules are present in order                            | PASS   |
-| CURRICULUM-002 | Lesson and resource completeness                  | Each module has learning content, examples, practice, and links  | All modules passed the data checks                            | PASS   |
-| CURRICULUM-003 | End-to-end curriculum content                     | Include at least 24 lessons from HTML to a MERN app              | 24 lessons found; first and final lesson titles matched       | PASS   |
-| UI-001         | Catalog API failure guidance and retry            | Explain API/DB failure and allow a retry                         | Browser displayed HTTP 500 guidance; retry sent a new request | PASS   |
-| UI-002         | Search query deep link                            | Search field reflects the URL's `search` parameter               | `/courses?search=writing` populated the search field          | PASS   |
+| ID             | Test                                              | Expected result                                                   | Actual result                                                 | Status |
+| -------------- | ------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- | ------ |
+| API-001        | Health endpoint                                   | `GET /api/health` returns 200 with the service status             | Returned 200 with `{ status: "ok", service: "LearnHub API" }` | PASS   |
+| API-002        | Unknown API route                                 | Unknown route returns 404 and a route-not-found message           | Returned 404 with the expected message                        | PASS   |
+| COURSE-001     | Public course list filtering                      | List omits lesson video URLs and quiz answer keys                 | Test double returned a course without video URL or quiz data  | PASS   |
+| COURSE-002     | Public course detail filtering                    | Public detail omits lesson video URLs and correct answer indexes  | Test double response omitted both fields                      | PASS   |
+| SEC-001        | Lesson video URL model validation                 | `javascript:` URL is rejected and valid HTTPS URL is accepted     | Unsafe URL validation failed as expected; HTTPS URL validated | PASS   |
+| AUTHZ-001      | Role middleware denies a non-matching/absent role | Return 403 and do not continue                                    | Returned 403 with permission error                            | PASS   |
+| AUTHZ-002      | Role middleware allows a matching role            | Continue to the next handler                                      | `next()` was called                                           | PASS   |
+| CURRICULUM-001 | Module order and topic coverage                   | Cover HTML through MongoDB in the intended order                  | All 8 modules are present in order                            | PASS   |
+| CURRICULUM-002 | Lesson and resource completeness                  | Each module has learning content, examples, practice, and links   | All modules passed the data checks                            | PASS   |
+| CURRICULUM-003 | End-to-end curriculum content                     | Include at least 24 lessons from HTML to a MERN app               | 24 lessons found; first and final lesson titles matched       | PASS   |
+| UI-001         | Catalog API fallback                              | Show searchable learning modules if the course API is unavailable | 8 modules displayed; Bootstrap search and MongoDB link worked | PASS   |
+| UI-002         | Search query deep link                            | Search field reflects the URL's `search` parameter                | `/courses?search=writing` populated the search field          | PASS   |
 
 ## Failed tests and defects
 
@@ -45,8 +45,8 @@ requires MongoDB.
   environment has no `JWT_SECRET`. The same environment has no `.env`,
   configured `MONGODB_URI`, MongoDB executable/service, or listener on port 27017.
 - The frontend proxy check returned HTTP 500 because nothing is listening on
-  the configured backend port. The frontend now reports this explicitly and
-  offers a retry action.
+  the configured backend port. Explore now shows the searchable static MERN
+  curriculum instead of exposing that API error, and provides a catalog retry.
 - Search results and topic filters against actual course documents could not
   be tested because the backend/database are unavailable. Topic filters now
   derive from published course data instead of listing categories with no

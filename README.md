@@ -142,7 +142,9 @@ The MERN starter path is available at `/learn/mern` and doesn't require Atlas.
 Completion marks are kept only in the current page session; they are not saved
 to the learner account. The inline practice runner executes HTML/CSS/JavaScript
 inside a sandboxed iframe. Node.js and MongoDB exercises link to external
-practice sites.
+practice sites. Explore also displays the static HTML-to-MERN learning modules
+when the API is unavailable or no published courses exist, so learners can
+still browse and search the curriculum.
 
 ## Deployment Status
 

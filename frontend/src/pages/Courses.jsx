@@ -1,8 +1,15 @@
-import { ArrowRight, Search, SlidersHorizontal } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import CourseCard from "../components/CourseCard.jsx";
 import Loader from "../components/Loader.jsx";
+import { mernCurriculum } from "../data/mernCurriculum.js";
 import { api } from "../services/api.js";
 
 export default function Courses() {
@@ -14,6 +21,8 @@ export default function Courses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [reloadCount, setReloadCount] = useState(0);
+
+  const showLearningPath = Boolean(error) || (!loading && courses.length === 0);
 
   useEffect(() => {
     let active = true;
@@ -49,15 +58,49 @@ export default function Courses() {
   const categories = useMemo(
     () => [
       "All topics",
-      ...new Set(
-        courses
-          .map((course) => course.category?.trim())
-          .filter(Boolean)
-          .sort((first, second) => first.localeCompare(second)),
-      ),
+      ...(showLearningPath
+        ? mernCurriculum.map((module) => module.title.split(":")[0])
+        : [
+            ...new Set(
+              courses
+                .map((course) => course.category?.trim())
+                .filter(Boolean)
+                .sort((first, second) => first.localeCompare(second)),
+            ),
+          ]),
     ],
-    [courses],
+    [courses, showLearningPath],
   );
+
+  useEffect(() => {
+    if (!categories.includes(category)) {
+      setCategory("All topics");
+    }
+  }, [categories, category]);
+
+  const filteredModules = useMemo(() => {
+    const search = query.trim().toLowerCase();
+
+    return mernCurriculum.filter((module) => {
+      const topic = module.title.split(":")[0];
+      const matchesCategory =
+        category === "All topics" ||
+        topic.toLowerCase() === category.toLowerCase();
+      const searchableContent = [
+        module.title,
+        module.summary,
+        ...module.lessons.flatMap((lesson) => [
+          lesson.title,
+          lesson.notes,
+          lesson.practice,
+        ]),
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return matchesCategory && (!search || searchableContent.includes(search));
+    });
+  }, [category, query]);
 
   const filtered = useMemo(
     () =>
@@ -104,8 +147,14 @@ export default function Courses() {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search courses..."
-            aria-label="Search courses"
+            placeholder={
+              showLearningPath
+                ? "Search skills and lessons..."
+                : "Search courses..."
+            }
+            aria-label={
+              showLearningPath ? "Search skills and lessons" : "Search courses"
+            }
           />
         </div>
       </div>
@@ -124,17 +173,83 @@ export default function Courses() {
       </div>
       {loading ? (
         <Loader label="Finding your next course" />
-      ) : error ? (
-        <div className="empty-note" role="alert">
-          <p>{error}</p>
-          <button
-            className="button button-outline"
-            onClick={() => setReloadCount((count) => count + 1)}
-            type="button"
-          >
-            Try again
-          </button>
-        </div>
+      ) : showLearningPath ? (
+        <section
+          aria-labelledby="learning-catalog-title"
+          className="learning-catalog"
+        >
+          <div className="learning-catalog-heading">
+            <div>
+              <span className="eyebrow">
+                <GraduationCap aria-hidden="true" size={15} />
+                BEGINNER-FRIENDLY LEARNING PATH
+              </span>
+              <h2 id="learning-catalog-title">
+                Learn web development from the ground up.
+              </h2>
+              <p>
+                Explore {mernCurriculum.length} skill areas and{" "}
+                {mernCurriculum.reduce(
+                  (total, module) => total + module.lessons.length,
+                  0,
+                )}{" "}
+                guided lessons, from HTML and CSS through the MERN stack. Each
+                topic includes simple notes, examples, practice, and learning
+                resources.
+              </p>
+            </div>
+            {error && (
+              <button
+                className="button button-outline"
+                onClick={() => setReloadCount((count) => count + 1)}
+                type="button"
+              >
+                Refresh catalog
+              </button>
+            )}
+          </div>
+
+          {filteredModules.length > 0 ? (
+            <div className="learning-module-grid">
+              {filteredModules.map((module) => {
+                const moduleIndex = mernCurriculum.indexOf(module);
+                const topic = module.title.split(":")[0];
+
+                return (
+                  <article className="learning-module-card" key={module.id}>
+                    <div className="learning-module-card-heading">
+                      <span className="learning-module-number">
+                        {String(moduleIndex + 1).padStart(2, "0")}
+                      </span>
+                      <span>{topic}</span>
+                    </div>
+                    <h3>{module.title.split(":").slice(1).join(":").trim()}</h3>
+                    <p>{module.summary}</p>
+                    <ul>
+                      {module.lessons.map((lesson) => (
+                        <li key={lesson.title}>
+                          <BookOpen aria-hidden="true" size={14} />
+                          {lesson.title}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="learning-module-card-footer">
+                      <span>{module.lessons.length} guided lessons</span>
+                      <Link to={`/learn/mern?module=${module.id}`}>
+                        Start learning{" "}
+                        <ArrowRight aria-hidden="true" size={15} />
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="empty-note">
+              No skills or lessons match your search.
+            </div>
+          )}
+        </section>
       ) : filtered.length ? (
         <>
           <div className="catalog-result-row">

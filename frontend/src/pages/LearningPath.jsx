@@ -9,12 +9,20 @@ import {
   GraduationCap,
   Terminal,
 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import CodePlayground from "../components/CodePlayground.jsx";
 import { mernCurriculum } from "../data/mernCurriculum.js";
 import "../styles/learning-path.css";
 
 export default function LearningPath() {
-  const [activeModuleId, setActiveModuleId] = useState(mernCurriculum[0].id);
+  const [searchParams] = useSearchParams();
+  const requestedModuleId = searchParams.get("module");
+  const initialModuleId = mernCurriculum.some(
+    (module) => module.id === requestedModuleId,
+  )
+    ? requestedModuleId
+    : mernCurriculum[0].id;
+  const [activeModuleId, setActiveModuleId] = useState(initialModuleId);
   const [activeLessonIndex, setActiveLessonIndex] = useState(0);
   const [completedLessons, setCompletedLessons] = useState(() => new Set());
 
