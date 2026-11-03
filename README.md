@@ -4,11 +4,10 @@
 
 - **Full-stack live demo:** Not deployed. Render and MongoDB Atlas are not
   provisioned for this project yet.
-- **Static curriculum preview:** The site files are published to the `gh-pages`
-  branch. To activate the URL, select `gh-pages` and `/(root)` in
-  [repository Pages settings](https://github.com/Anji0522/learnhub-lms/settings/pages).
-  The preview will not include API-backed authentication, courses, or student
-  data.
+- **Static curriculum preview:** The deployment workflow publishes the site
+  files and configures GitHub Pages to use `gh-pages` at `/(root)`. The link
+  will be added after the live site is verified. This preview will not include
+  API-backed authentication, courses, or student data.
 - **GitHub:** [Anji0522/learnhub-lms](https://github.com/Anji0522/learnhub-lms)
 
 ## Project Overview
@@ -153,14 +152,11 @@ still browse and search the curriculum.
 
 ## Deployment Status
 
-The static curriculum preview is configured to publish its built files to the
-`gh-pages` branch; its deployment workflow succeeded. The public URL still
-returns 404 until repository settings use **Pages → Build and deployment →
-Source: Deploy from a branch → Branch: `gh-pages` → Folder: `/(root)`**. The
-URL will be added here after that setting is selected and the site is verified.
-The preview only demonstrates the frontend curriculum; API-backed
-authentication, course management, and saved student data require the
-full-stack deployment.
+The static curriculum workflow publishes built files to the `gh-pages` branch
+and configures the repository Pages site to use that branch. The link will be
+added after the site is available and verified. The preview only demonstrates
+the frontend curriculum; API-backed authentication, course management, and
+saved student data require the full-stack deployment.
 
 The full-stack app is not deployed. A MongoDB Atlas URI, Render and Vercel
 provider settings, assigned hosting URLs, and live API smoke tests are still
