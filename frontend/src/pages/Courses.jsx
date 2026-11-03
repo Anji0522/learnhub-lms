@@ -1,5 +1,6 @@
 import { ArrowRight, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import CourseCard from "../components/CourseCard.jsx";
 import Loader from "../components/Loader.jsx";
 import { api } from "../services/api.js";
@@ -15,9 +16,10 @@ const categories = [
 ];
 
 export default function Courses() {
+  const [searchParams] = useSearchParams();
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState("All topics");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(() => searchParams.get("search") || "");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

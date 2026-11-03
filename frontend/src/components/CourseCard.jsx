@@ -1,4 +1,4 @@
-import { ArrowUpRight, Clock3, Play } from "lucide-react";
+import { ArrowRight, BookOpen, Clock3, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const palettes = ["lavender", "peach", "mint", "blue"];
@@ -11,6 +11,12 @@ const covers = [
 
 export default function CourseCard({ course, index = 0 }) {
   const palette = palettes[index % palettes.length];
+  const lessonCount = course.lessonCount ?? course.lessons?.length ?? 0;
+  const rating =
+    typeof course.rating === "number" ? course.rating.toFixed(1) : null;
+  const learnerCount = course.enrollmentCount ?? course.studentCount;
+  const durationMinutes = course.durationMinutes;
+
   return (
     <Link className="course-card" to={`/courses/${course._id}`}>
       <div
@@ -21,24 +27,23 @@ export default function CourseCard({ course, index = 0 }) {
             : { backgroundImage: `url("${covers[index % covers.length]}")` }
         }
       >
-        <span className="cover-tag">
-          {course.category || "Creative skills"}
-        </span>
-        <span className="cover-play">
-          <Play size={16} fill="currentColor" />
-        </span>
+        <span className="cover-tag">{course.category || "Course"}</span>
       </div>
       <div className="course-card-content">
         <div className="course-meta">
-          <span>{course.level || "All levels"}</span>
-          <span>
-            <Clock3 size={13} />{" "}
-            {Math.max(
-              1,
-              (course.lessonCount ?? course.lessons?.length ?? 0) * 12,
-            )}{" "}
-            min
-          </span>
+          <span className="course-level">{course.level || "All levels"}</span>
+          {rating && (
+            <span className="course-rating">
+              <Star size={14} fill="currentColor" />
+              {rating}
+            </span>
+          )}
+          {typeof durationMinutes === "number" && (
+            <span className="course-duration">
+              <Clock3 size={13} />
+              {durationMinutes} min
+            </span>
+          )}
         </div>
         <h3>{course.title}</h3>
         <p>{course.description}</p>
@@ -48,10 +53,19 @@ export default function CourseCard({ course, index = 0 }) {
               ? course.instructor?.name
               : "LearnHub instructor"}
           </span>
-          <span className="card-arrow">
-            <ArrowUpRight size={17} />
+          <span className="course-card-stats">
+            <span>
+              <BookOpen size={14} />
+              {lessonCount} lessons
+            </span>
+            {typeof learnerCount === "number" && (
+              <span>{learnerCount} learners</span>
+            )}
           </span>
         </div>
+        <span className="course-card-cta">
+          View course <ArrowRight size={15} />
+        </span>
       </div>
     </Link>
   );

@@ -2,20 +2,24 @@ import {
   ArrowRight,
   ArrowUpRight,
   BookOpen,
+  ChartNoAxesCombined,
   Check,
   CirclePlay,
   Compass,
   Plus,
   Sparkles,
+  UsersRound,
   Users,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CourseCard from "../components/CourseCard.jsx";
 import Loader from "../components/Loader.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { api } from "../services/api.js";
+
+const ProgressChart = lazy(() => import("../components/ProgressChart.jsx"));
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -25,6 +29,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [created, setCreated] = useState(false);
+
+  async function refreshInstructorCourses() {
+    const { courses: currentCourses } = await api("/courses/mine");
+    setCourses(currentCourses);
+    setCreated(true);
+  }
 
   useEffect(() => {
     const request =
@@ -66,7 +76,7 @@ export default function Dashboard() {
         ) : user?.role === "instructor" ? (
           <InstructorOverview
             courses={courses}
-            onCreated={() => setCreated(true)}
+            onCreated={refreshInstructorCourses}
             created={created}
           />
         ) : (
@@ -79,31 +89,46 @@ export default function Dashboard() {
 
 function StudentOverview({ progress }) {
   const completed = progress.filter((item) => item.percent === 100).length;
+  const averageProgress = progress.length
+    ? Math.round(
+        progress.reduce((total, item) => total + item.percent, 0) /
+          progress.length,
+      )
+    : 0;
+  const progressChart = progress.slice(0, 6).map((item) => ({
+    name: item.title,
+    progress: item.percent,
+  }));
+
   return (
     <>
-      <div className="stat-grid">
+      <div className="stat-grid student-stat-grid">
         <div className="stat-card">
-          <span>ON YOUR SHELF</span>
-          <strong>{progress.length.toString().padStart(2, "0")}</strong>
-          <small>courses you’ve joined</small>
+          <span>ENROLLED COURSES</span>
+          <strong>{progress.length}</strong>
+          <small>courses in your learning plan</small>
           <BookOpen size={18} />
         </div>
         <div className="stat-card stat-card-lavender">
-          <span>LITTLE WINS</span>
-          <strong>{completed.toString().padStart(2, "0")}</strong>
+          <span>COMPLETED COURSES</span>
+          <strong>{completed}</strong>
           <small>courses completed</small>
-          <Sparkles size={18} />
+          <Check size={18} />
         </div>
-        <Link className="stat-card stat-card-peach" to="/courses">
-          <span>WHAT’S NEXT?</span>
-          <strong className="stat-text">
-            Find it <ArrowUpRight size={20} />
-          </strong>
-          <small>There’s something for you</small>
+        <div className="stat-card stat-card-teal">
+          <span>LEARNING HOURS</span>
+          <strong>—</strong>
+          <small>lesson timing is not tracked yet</small>
+          <ChartNoAxesCombined size={18} />
+        </div>
+        <div className="stat-card stat-card-success">
+          <span>CURRENT PROGRESS</span>
+          <strong>{averageProgress}%</strong>
+          <small>average across enrolled courses</small>
           <Compass size={18} />
-        </Link>
+        </div>
       </div>
-      <section className="dashboard-section">
+      <section className="dashboard-section" id="my-learning">
         <div className="dashboard-section-title">
           <div>
             <span className="eyebrow">
@@ -117,6 +142,11 @@ function StudentOverview({ progress }) {
             Find another course <ArrowRight size={14} />
           </Link>
         </div>
+        {progressChart.length > 0 && (
+          <Suspense fallback={<Loader label="Loading learning analytics" />}>
+            <ProgressChart data={progressChart} />
+          </Suspense>
+        )}
         {progress.length ? (
           <div className="progress-list">
             {progress.map((item) => (
@@ -158,24 +188,34 @@ function StudentOverview({ progress }) {
 }
 
 function InstructorOverview({ courses, onCreated, created }) {
+  const courseChart = courses.slice(0, 6).map((course) => ({
+    name: course.title,
+    lessons: course.lessons?.length ?? 0,
+  }));
+
   return (
     <>
-      <div className="stat-grid">
+      <div className="stat-grid instructor-stat-grid">
         <div className="stat-card">
-          <span>ON YOUR SHELF</span>
-          <strong>{courses.length.toString().padStart(2, "0")}</strong>
+          <span>TOTAL COURSES</span>
+          <strong>{courses.length}</strong>
           <small>courses you’re teaching</small>
           <BookOpen size={18} />
         </div>
         <div className="stat-card stat-card-lavender">
-          <span>MAKE SOME SPACE</span>
-          <strong className="stat-text">
-            Share it <Sparkles size={19} />
-          </strong>
-          <small>for your next great idea</small>
+          <span>TOTAL STUDENTS</span>
+          <strong>—</strong>
+          <small>enrollment counts are not provided</small>
+          <UsersRound size={18} />
+        </div>
+        <div className="stat-card stat-card-teal">
+          <span>COURSE RATINGS</span>
+          <strong>—</strong>
+          <small>ratings are not tracked yet</small>
+          <Sparkles size={18} />
         </div>
       </div>
-      <section className="dashboard-section">
+      <section className="dashboard-section" id="my-courses">
         <div className="dashboard-section-title">
           <div>
             <span className="eyebrow">
@@ -186,17 +226,23 @@ function InstructorOverview({ courses, onCreated, created }) {
             </h2>
           </div>
         </div>
-        <CourseCreator
-          onCreated={async () => {
-            const { courses: items } = await api("/courses/mine");
-            setCourses(items);
-            onCreated();
-          }}
-        />
+        <CourseCreator onCreated={onCreated} />
         {created && (
           <p className="success-note">
             <Check size={16} /> Your course is live on the shelf.
           </p>
+        )}
+        {courseChart.length > 0 && (
+          <Suspense fallback={<Loader label="Loading course analytics" />}>
+            <ProgressChart
+              data={courseChart.map((course) => ({
+                name: course.name,
+                progress: course.lessons,
+              }))}
+              title="Lessons in your courses"
+              valueLabel="Lessons"
+            />
+          </Suspense>
         )}
         {courses.length ? (
           <div className="course-grid">
@@ -223,7 +269,8 @@ function CourseCreator({ onCreated }) {
     event.preventDefault();
     setBusy(true);
     setError("");
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const firstLesson = form.get("lesson").trim();
     try {
       await api("/courses", {
@@ -236,7 +283,7 @@ function CourseCreator({ onCreated }) {
           lessons: firstLesson ? [{ title: firstLesson, order: 0 }] : [],
         },
       });
-      event.currentTarget.reset();
+      formElement.reset();
       setOpen(false);
       onCreated();
     } catch (reason) {
@@ -308,35 +355,48 @@ function CourseCreator({ onCreated }) {
 }
 
 function AdminOverview({ stats }) {
+  const chartData = [
+    { name: "Students", value: stats?.students ?? 0 },
+    { name: "Instructors", value: stats?.instructors ?? 0 },
+    { name: "Courses", value: stats?.courses ?? 0 },
+    { name: "Enrollments", value: stats?.enrollments ?? 0 },
+  ];
+
   return (
     <>
-      <div className="stat-grid">
+      <div className="stat-grid admin-stat-grid">
         <div className="stat-card">
-          <span>LEARNERS</span>
+          <span>TOTAL USERS</span>
+          <strong>—</strong>
+          <small>not provided by the current API</small>
+          <UsersRound size={18} />
+        </div>
+        <div className="stat-card">
+          <span>TOTAL STUDENTS</span>
           <strong>{stats?.students ?? "—"}</strong>
-          <small>students finding their way</small>
+          <small>registered student accounts</small>
           <BookOpen size={18} />
         </div>
         <div className="stat-card stat-card-lavender">
-          <span>TEACHERS</span>
+          <span>TOTAL INSTRUCTORS</span>
           <strong>{stats?.instructors ?? "—"}</strong>
-          <small>instructors sharing skills</small>
+          <small>instructor accounts</small>
           <Users size={18} />
         </div>
-        <div className="stat-card stat-card-peach">
-          <span>COURSE SHELF</span>
+        <div className="stat-card stat-card-teal">
+          <span>TOTAL COURSES</span>
           <strong>{stats?.courses ?? "—"}</strong>
-          <small>courses available</small>
-          <Sparkles size={18} />
+          <small>courses on the platform</small>
+          <BookOpen size={18} />
         </div>
-        <div className="stat-card stat-card-mint">
-          <span>ENROLLMENTS</span>
-          <strong>{stats?.enrollments ?? "—"}</strong>
-          <small>learning journeys started</small>
+        <div className="stat-card stat-card-success">
+          <span>PENDING APPROVALS</span>
+          <strong>—</strong>
+          <small>approval status is not tracked</small>
           <Check size={18} />
         </div>
       </div>
-      <section className="dashboard-section">
+      <section className="dashboard-section" id="admin-overview">
         <div className="dashboard-section-title">
           <div>
             <span className="eyebrow">
@@ -350,6 +410,16 @@ function AdminOverview({ stats }) {
             Browse courses <ArrowRight size={14} />
           </Link>
         </div>
+        <Suspense fallback={<Loader label="Loading platform analytics" />}>
+          <ProgressChart
+            data={chartData.map((item) => ({
+              name: item.name,
+              progress: item.value,
+            }))}
+            title="Platform activity"
+            valueLabel="Count"
+          />
+        </Suspense>
         <div className="dashboard-empty">
           <h3>Good things are growing here.</h3>
           <p>Check back as more learners and instructors join the community.</p>
