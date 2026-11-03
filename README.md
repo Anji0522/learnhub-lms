@@ -4,11 +4,10 @@
 
 - **Full-stack live demo:** Not deployed. Render and MongoDB Atlas are not
   provisioned for this project yet.
-- **Static curriculum preview (pending activation):**
-  [https://anji0522.github.io/learnhub-lms/](https://anji0522.github.io/learnhub-lms/)
-  is not live yet because GitHub Pages has not been enabled in repository
-  settings. This preview will not include API-backed authentication, courses,
-  or student data.
+- **Static curriculum preview:** Not published yet. Enable GitHub Pages in
+  [repository settings](https://github.com/Anji0522/learnhub-lms/settings/pages)
+  and run the “Deploy curriculum preview” workflow. The preview will not
+  include API-backed authentication, courses, or student data.
 - **GitHub:** [Anji0522/learnhub-lms](https://github.com/Anji0522/learnhub-lms)
 
 ## Project Overview
@@ -156,10 +155,11 @@ still browse and search the curriculum.
 The static curriculum preview is configured to deploy from GitHub Actions to
 GitHub Pages. The workflow build and tests pass, but GitHub rejected the
 deployment because Pages is not enabled for this repository. Enable GitHub
-Pages with **Settings → Pages → Build and deployment → Source: GitHub Actions**
-to publish the pending preview URL above. It only demonstrates the frontend
-curriculum; API-backed authentication, course management, and saved student
-data require the full-stack deployment.
+Pages with **Settings → Pages → Build and deployment → Source: GitHub Actions**,
+then run the “Deploy curriculum preview” workflow from the Actions tab. Add the
+resulting URL here only after verifying it loads. The preview only demonstrates
+the frontend curriculum; API-backed authentication, course management, and
+saved student data require the full-stack deployment.
 
 The full-stack app is not deployed. A MongoDB Atlas URI, Render and Vercel
 provider settings, assigned hosting URLs, and live API smoke tests are still

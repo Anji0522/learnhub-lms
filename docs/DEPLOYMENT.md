@@ -11,9 +11,11 @@ with the repository base path and publishes a static curriculum preview.
 Before it can deploy, enable **Repository Settings → Pages → Build and
 deployment → Source: GitHub Actions**. The first deployment workflow currently
 fails at its publish step because Pages is not enabled. Once enabled, rerun the
-workflow or push a commit, then verify the published URL before treating it as
-live. This preview has no backend, database, authentication, or persisted
-student data.
+“Deploy curriculum preview” workflow from the Actions tab, then verify the
+published URL before treating it as live. The workflow is manually triggered
+while Pages is not configured to avoid repeated failed deployment attempts.
+This preview has no backend, database, authentication, or persisted student
+data.
 
 ## Publish the full-stack demo
 
