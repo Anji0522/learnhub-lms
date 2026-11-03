@@ -29,7 +29,10 @@ Deployment configuration is prepared for Vercel and Render. See the [deployment 
 Public registration creates Student accounts only. To promote an account, update its `role` in MongoDB using an existing account email:
 
 ```javascript
-db.users.updateOne({ email: "instructor@example.com" }, { $set: { role: "instructor" } })
+db.users.updateOne(
+  { email: "instructor@example.com" },
+  { $set: { role: "instructor" } },
+);
 ```
 
 Instructors can manage their own courses; Admins can manage every course and see platform statistics.

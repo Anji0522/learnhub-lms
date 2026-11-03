@@ -8,8 +8,15 @@ export async function dashboard(req, res) {
     Course.countDocuments(),
     User.aggregate([
       { $project: { enrollmentCount: { $size: "$enrollments" } } },
-      { $group: { _id: null, total: { $sum: "$enrollmentCount" } } }
-    ])
+      { $group: { _id: null, total: { $sum: "$enrollmentCount" } } },
+    ]),
   ]);
-  res.json({ stats: { students, instructors, courses, enrollments: enrollments[0]?.total ?? 0 } });
+  res.json({
+    stats: {
+      students,
+      instructors,
+      courses,
+      enrollments: enrollments[0]?.total ?? 0,
+    },
+  });
 }

@@ -5,5 +5,10 @@ import { requireRole } from "../middleware/roleMiddleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
-router.get("/dashboard", requireAuth, requireRole("admin"), asyncHandler(dashboard));
+router.get(
+  "/dashboard",
+  requireAuth,
+  requireRole("admin"),
+  asyncHandler(dashboard),
+);
 export default router;
