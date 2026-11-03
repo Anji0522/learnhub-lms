@@ -7,13 +7,12 @@ The repo includes a Render Blueprint (`render.yaml`) for the Express API and a V
 ## Static curriculum preview on GitHub Pages
 
 The `Deploy curriculum preview` GitHub Actions workflow builds the frontend
-with the repository base path and publishes a static curriculum preview.
-Enable **Repository Settings → Pages → Build and deployment → Source: GitHub
-Actions**. The latest deployment attempt still failed because GitHub reports
-that Pages is not enabled for Actions. After selecting that source, run
-“Deploy curriculum preview” from the Actions tab and verify the published URL.
-This preview has no backend, database, authentication, or persisted student
-data.
+with the repository base path and publishes the static files to the `gh-pages`
+branch. In **Repository Settings → Pages → Build and deployment**, select
+**Deploy from a branch**, then choose `gh-pages` and `/(root)`. The workflow
+creates or updates the branch on a push to `main` or a manual run. Once the
+branch appears in the Pages settings, select it and verify the site URL. This
+preview has no backend, database, authentication, or persisted student data.
 
 ## Publish the full-stack demo
 
