@@ -28,8 +28,8 @@ demo URL.
   synchronized with the search field.
 - Added/retained CI for formatting, backend tests, and frontend production
   build.
-- GitHub Actions passed for documentation commit `c603bc3`
-  ([run 41598522873](https://github.com/Anji0522/learnhub-lms/actions/runs/41598522873)).
+- GitHub Actions passed for code commit `c1347fd`
+  ([run 41599605058](https://github.com/Anji0522/learnhub-lms/actions/runs/41599605058)).
 - Pushed the previous audit and security fix to
   [GitHub](https://github.com/Anji0522/learnhub-lms), commit `d3f379d`.
 

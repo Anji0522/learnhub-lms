@@ -79,7 +79,6 @@ and deployed URLs are not configured in this environment.
 
 The GitHub Actions workflow at `.github/workflows/ci.yml` runs `npm ci`,
 `npm run format:check`, `npm test`, and `npm run build` on pushes and pull
-requests targeting `main`. The last recorded CI run for commit `d3f379d`
-completed successfully, and CI also completed successfully for documentation
-commit `c603bc3` ([run 41598522873](https://github.com/Anji0522/learnhub-lms/actions/runs/41598522873)).
+requests targeting `main`. CI passed for the latest code commit `c1347fd`
+([run 41599605058](https://github.com/Anji0522/learnhub-lms/actions/runs/41599605058)).
 That workflow does not provide MongoDB or test production integration.
