@@ -8,11 +8,11 @@ The repo includes a Render Blueprint (`render.yaml`) for the Express API and a V
 
 The `Deploy curriculum preview` GitHub Actions workflow builds the frontend
 with the repository base path and publishes the static files to the `gh-pages`
-branch. In **Repository Settings → Pages → Build and deployment**, select
-**Deploy from a branch**, then choose `gh-pages` and `/(root)`. The workflow
-creates or updates the branch on a push to `main` or a manual run. Once the
-branch appears in the Pages settings, select it and verify the site URL. This
-preview has no backend, database, authentication, or persisted student data.
+branch; the workflow has successfully published it. In **Repository Settings
+→ Pages → Build and deployment**, select **Deploy from a branch**, then choose
+`gh-pages` and `/(root)`. The public URL currently returns 404 until that
+branch source is selected. Verify the site URL after selecting it. This preview
+has no backend, database, authentication, or persisted student data.
 
 ## Publish the full-stack demo
 

@@ -4,11 +4,10 @@
 
 - **Full-stack live demo:** Not deployed. Render and MongoDB Atlas are not
   provisioned for this project yet.
-- **Static curriculum preview:** Branch deployment is being prepared. The
-  workflow publishes static files to `gh-pages`; select that branch and the
-  root folder in
+- **Static curriculum preview:** The site files are published to the `gh-pages`
+  branch. To activate the URL, select `gh-pages` and `/(root)` in
   [repository Pages settings](https://github.com/Anji0522/learnhub-lms/settings/pages).
-  This preview will not include API-backed authentication, courses, or student
+  The preview will not include API-backed authentication, courses, or student
   data.
 - **GitHub:** [Anji0522/learnhub-lms](https://github.com/Anji0522/learnhub-lms)
 
@@ -155,12 +154,13 @@ still browse and search the curriculum.
 ## Deployment Status
 
 The static curriculum preview is configured to publish its built files to the
-`gh-pages` branch. In repository settings choose **Pages → Build and deployment
-→ Source: Deploy from a branch → Branch: `gh-pages` → Folder: `/(root)`**. The
-deployment workflow creates or updates that branch. The public URL will be
-added here only after Pages is configured and the site is verified. The preview
-only demonstrates the frontend curriculum; API-backed authentication, course
-management, and saved student data require the full-stack deployment.
+`gh-pages` branch; its deployment workflow succeeded. The public URL still
+returns 404 until repository settings use **Pages → Build and deployment →
+Source: Deploy from a branch → Branch: `gh-pages` → Folder: `/(root)`**. The
+URL will be added here after that setting is selected and the site is verified.
+The preview only demonstrates the frontend curriculum; API-backed
+authentication, course management, and saved student data require the
+full-stack deployment.
 
 The full-stack app is not deployed. A MongoDB Atlas URI, Render and Vercel
 provider settings, assigned hosting URLs, and live API smoke tests are still
