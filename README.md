@@ -2,8 +2,11 @@
 
 ## Live Demo and Repository
 
-- **Live demo:** Not deployed. Vercel, Render, and MongoDB Atlas are not
-  provisioned for this project yet. No demo URL is available.
+- **Full-stack live demo:** Not deployed. Render and MongoDB Atlas are not
+  provisioned for this project yet.
+- **Static curriculum preview:** GitHub Pages deployment is being prepared;
+  this preview will not include API-backed authentication, courses, or student
+  data.
 - **GitHub:** [Anji0522/learnhub-lms](https://github.com/Anji0522/learnhub-lms)
 
 ## Project Overview
@@ -148,11 +151,16 @@ still browse and search the curriculum.
 
 ## Deployment Status
 
-Vercel and Render configuration is prepared but not deployed. A MongoDB Atlas
-URI, provider environment settings, assigned hosting URLs, and live smoke tests
-are still required. Do not treat the repository or deployment configuration as
-a live demo. See the [deployment guide](docs/DEPLOYMENT.md); add a demo URL here
-only after deployment and end-to-end verification succeed.
+The static curriculum preview is configured to deploy from GitHub Actions to
+GitHub Pages. Its URL will be added here after the deployment succeeds and the
+published page is verified. It only demonstrates the frontend curriculum;
+API-backed authentication, course management, and saved student data require
+the full-stack deployment.
+
+The full-stack app is not deployed. A MongoDB Atlas URI, Render and Vercel
+provider settings, assigned hosting URLs, and live API smoke tests are still
+required. See the [deployment guide](docs/DEPLOYMENT.md); do not treat the
+static preview as a complete full-stack demo.
 
 ## Known Limitations
 
