@@ -4,6 +4,17 @@ For local development, use Node.js 20+, MongoDB, and `npm install`, then start w
 
 The repo includes a Render Blueprint (`render.yaml`) for the Express API and a Vercel config (`vercel.json`) for the React app and same-origin `/api` proxy. These files prepare deployment; they do not create hosting accounts, database credentials, or a live deployment by themselves.
 
+## Static curriculum preview on GitHub Pages
+
+The `Deploy curriculum preview` GitHub Actions workflow builds the frontend
+with the repository base path and publishes a static curriculum preview.
+Before it can deploy, enable **Repository Settings → Pages → Build and
+deployment → Source: GitHub Actions**. The first deployment workflow currently
+fails at its publish step because Pages is not enabled. Once enabled, rerun the
+workflow or push a commit, then verify the published URL before treating it as
+live. This preview has no backend, database, authentication, or persisted
+student data.
+
 ## Publish the full-stack demo
 
 1. **Create MongoDB Atlas credentials.** Create a database and a dedicated database user. Configure Atlas Network Access for Render's outbound connections. Render Free does not provide fixed outbound IPs; if using Atlas's `0.0.0.0/0` allowlist, use a unique strong database password and restrict the database user's permissions.
