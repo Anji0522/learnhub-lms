@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import mongoose from "mongoose";
 import { after, before, test } from "node:test";
 import app from "../app.js";
 import Course from "../models/Course.js";
@@ -110,4 +111,28 @@ test("public course details hide quiz answers and lesson video URLs", async () =
   } finally {
     Course.findById = originalFindById;
   }
+});
+
+test("course model rejects unsafe lesson video URLs", async () => {
+  const course = new Course({
+    title: "Test course",
+    description: "A course used to verify URL validation.",
+    category: "Testing",
+    instructor: new mongoose.Types.ObjectId(),
+    lessons: [
+      {
+        title: "Unsafe lesson",
+        videoUrl: "javascript:alert(1)",
+      },
+    ],
+  });
+
+  await assert.rejects(course.validate(), (error) => {
+    assert.ok(error.errors["lessons.0.videoUrl"]);
+    assert.match(error.errors["lessons.0.videoUrl"].message, /must use HTTPS/);
+    return true;
+  });
+
+  course.lessons[0].videoUrl = "https://example.test/lesson";
+  await course.validate();
 });

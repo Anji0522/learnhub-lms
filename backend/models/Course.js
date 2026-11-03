@@ -1,9 +1,31 @@
 import mongoose from "mongoose";
 
+function isSecureVideoUrl(value) {
+  if (!value) {
+    return true;
+  }
+
+  if (!URL.canParse(value)) {
+    return false;
+  }
+
+  const parsedUrl = new URL(value);
+  return parsedUrl.protocol === "https:" && Boolean(parsedUrl.hostname);
+}
+
 const lessonSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true, maxlength: 160 },
   description: { type: String, trim: true, maxlength: 2000, default: "" },
-  videoUrl: { type: String, trim: true, maxlength: 2048, default: "" },
+  videoUrl: {
+    type: String,
+    trim: true,
+    maxlength: 2048,
+    default: "",
+    validate: {
+      validator: isSecureVideoUrl,
+      message: "Lesson video URLs must use HTTPS.",
+    },
+  },
   order: { type: Number, min: 0, default: 0 },
 });
 

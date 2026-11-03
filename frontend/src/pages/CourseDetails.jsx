@@ -14,6 +14,15 @@ import Loader from "../components/Loader.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { api } from "../services/api.js";
 
+function isSecureVideoUrl(value) {
+  if (typeof value !== "string" || !URL.canParse(value)) {
+    return false;
+  }
+
+  const parsedUrl = new URL(value);
+  return parsedUrl.protocol === "https:" && Boolean(parsedUrl.hostname);
+}
+
 export default function CourseDetails() {
   const { id } = useParams();
   const { user, refresh } = useAuth();
@@ -179,7 +188,7 @@ export default function CourseDetails() {
                   </div>
                   {enrolled ? (
                     <div className="lesson-row-actions">
-                      {lesson.videoUrl && (
+                      {isSecureVideoUrl(lesson.videoUrl) && (
                         <a
                           className="lesson-play"
                           href={lesson.videoUrl}
