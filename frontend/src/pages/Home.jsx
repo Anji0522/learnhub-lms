@@ -68,6 +68,9 @@ export default function Home() {
             <Link className="button button-dark" to="/courses">
               Find your next thing <ArrowUpRight size={16} />
             </Link>
+            <Link className="text-link" to="/learn/mern">
+              Start the MERN path <ArrowRight size={15} />
+            </Link>
             <Link className="text-link" to="/about">
               Get to know us <ArrowRight size={15} />
             </Link>

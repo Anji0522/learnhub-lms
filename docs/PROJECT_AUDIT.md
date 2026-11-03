@@ -35,6 +35,12 @@ database or claim a MySQL implementation.
 
 - `frontend/`: React 18 and Vite application, React Router, shared API client,
   role-aware dashboard, and responsive light/dark theme.
+- `frontend/src/pages/LearningPath.jsx` and
+  `frontend/src/data/mernCurriculum.js`: static beginner curriculum that can
+  be opened without the API; lesson completion is only held in page memory.
+- `frontend/src/components/CodePlayground.jsx`: HTML/CSS/JavaScript preview
+  isolated in a sandboxed iframe; server/database practice links open external
+  sites.
 - `backend/`: Express API, Mongoose models, JWT authentication in an HTTP-only
   cookie, role middleware, controllers, and Node's built-in test runner.
 - `database/README.md` and `backend/database/seed.js`: MongoDB setup and
@@ -73,6 +79,10 @@ presented as available:
 - Password reset, email verification, and self-service role changes.
 - Pagination for course lists.
 - Automated frontend component tests or database-backed end-to-end tests.
+- Persistent progress for the static MERN learning path; its completion
+  markers reset when the page is reloaded and are not linked to account data.
+- In-browser Node.js, Express, or MongoDB execution; the inline runner supports
+  HTML/CSS/JavaScript, and server/database practice uses external tools.
 
 Public registration creates student accounts. Promoting an account to an
 instructor or administrator currently requires a trusted direct database

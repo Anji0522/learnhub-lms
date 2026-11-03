@@ -105,6 +105,9 @@ export default function Navbar() {
           <NavLink to="/courses" onClick={closeMenus}>
             Explore
           </NavLink>
+          <NavLink to="/learn/mern" onClick={closeMenus}>
+            Learn MERN
+          </NavLink>
           <NavLink to="/about" onClick={closeMenus}>
             About
           </NavLink>

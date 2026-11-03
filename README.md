@@ -34,6 +34,10 @@ It uses MongoDB through Mongoose. It does not currently use MySQL.
 - Admin platform counts
 - Responsive dashboard UI, light/dark theme preference, and analytics charts
   for available data
+- An original beginner MERN curriculum covering HTML, CSS, JavaScript,
+  Bootstrap, Node.js, Express, React, and MongoDB, with notes, examples,
+  official docs, YouTube tutorial searches, and an isolated browser practice
+  preview
 
 Public registration creates student accounts. Promoting an account to an
 instructor or administrator currently requires a trusted direct MongoDB update.
@@ -133,6 +137,12 @@ npm run build
 connect to MongoDB, so passing unit/API tests do not verify database-backed
 registration, course workflows, or deployment behavior. See the
 [testing report](docs/TESTING_REPORT.md) for executed cases and coverage gaps.
+
+The MERN starter path is available at `/learn/mern` and doesn't require Atlas.
+Completion marks are kept only in the current page session; they are not saved
+to the learner account. The inline practice runner executes HTML/CSS/JavaScript
+inside a sandboxed iframe. Node.js and MongoDB exercises link to external
+practice sites.
 
 ## Deployment Status
 

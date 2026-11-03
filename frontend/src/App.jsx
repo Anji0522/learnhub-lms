@@ -6,6 +6,7 @@ import CourseDetails from "./pages/CourseDetails.jsx";
 import Courses from "./pages/Courses.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Home from "./pages/Home.jsx";
+import LearningPath from "./pages/LearningPath.jsx";
 import { About, Contact } from "./pages/InfoPages.jsx";
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="learn/mern" element={<LearningPath />} />
         <Route path="courses" element={<Courses />} />
         <Route path="courses/:id" element={<CourseDetails />} />
         <Route path="about" element={<About />} />
