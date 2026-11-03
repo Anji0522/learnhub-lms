@@ -25,6 +25,8 @@ demo URL.
   checks, deployment status, and known limitations.
 - Added/retained CI for formatting, backend tests, and frontend production
   build.
+- GitHub Actions passed for documentation commit `c603bc3`
+  ([run 41598522873](https://github.com/Anji0522/learnhub-lms/actions/runs/41598522873)).
 - Pushed the previous audit and security fix to
   [GitHub](https://github.com/Anji0522/learnhub-lms), commit `d3f379d`.
 
@@ -65,7 +67,6 @@ See [TESTING_REPORT.md](./TESTING_REPORT.md) for case-level outcomes.
   admin user management, and pagination) are required.
 - Consider server-side JWT revocation if immediate invalidation after logout
   becomes a product/security requirement.
-- Confirm GitHub Actions passes for the documentation update commit.
 
 ## Blocked
 
