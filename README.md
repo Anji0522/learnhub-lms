@@ -17,6 +17,12 @@ LearnHub is a MERN learning platform for Students, Instructors, and Admins. It i
 
 The API exits with an explicit error if MongoDB is unavailable; it never falls back to mock persistence.
 
+## Demo
+
+**Live demo:** Not deployed yet. The [GitHub repository](https://github.com/Anji0522/learnhub-lms) is the source-code link, not a live demo.
+
+To try LearnHub locally, start MongoDB, configure `.env` as described above, and run `npm run dev`.
+
 ## Roles
 
 Public registration creates Student accounts only. To promote an account, update its `role` in MongoDB using an existing account email:
