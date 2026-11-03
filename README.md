@@ -4,9 +4,12 @@
 
 - **Full-stack live demo:** Not deployed. Render and MongoDB Atlas are not
   provisioned for this project yet.
-- **Static curriculum preview:** GitHub Pages is enabled; deployment is running.
-  The published link will be added after the site is verified. This preview
-  will not include API-backed authentication, courses, or student data.
+- **Static curriculum preview:** Not published. GitHub rejected the Pages
+  deployment because Pages is not enabled for Actions. Set the Pages source to
+  GitHub Actions in
+  [repository settings](https://github.com/Anji0522/learnhub-lms/settings/pages),
+  then run the deployment workflow. This preview will not include API-backed
+  authentication, courses, or student data.
 - **GitHub:** [Anji0522/learnhub-lms](https://github.com/Anji0522/learnhub-lms)
 
 ## Project Overview
@@ -152,9 +155,12 @@ still browse and search the curriculum.
 ## Deployment Status
 
 The static curriculum preview is configured to deploy from GitHub Actions to
-GitHub Pages. Pages has now been enabled; the latest push triggers a deployment.
-The public URL will be added here after the deployment succeeds and the page is
-verified. The preview only demonstrates the frontend curriculum; API-backed
+GitHub Pages. The latest deployment attempt failed because GitHub reports that
+Pages is not enabled for Actions, and the expected URL currently returns 404.
+In repository settings, choose **Pages → Build and deployment → Source: GitHub
+Actions**, then run “Deploy curriculum preview” from the Actions tab. The URL
+will be added here only after a successful deployment and live verification.
+The preview only demonstrates the frontend curriculum; API-backed
 authentication, course management, and saved student data require the
 full-stack deployment.
 
