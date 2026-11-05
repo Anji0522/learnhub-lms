@@ -4,11 +4,12 @@
 
 - **Full-stack live demo:** Not deployed. Render and MongoDB Atlas are not
   provisioned for this project yet.
-- **Static curriculum preview:** The site files are published to the
-  `gh-pages` branch, but the live site is not active yet. In
+- **Static curriculum preview:** [Open the preview](https://anji0522.github.io/learnhub-lms/).
+  The files are published to the `gh-pages` branch, but GitHub Pages has not
+  been activated for this repository yet. In
   [repository Pages settings](https://github.com/Anji0522/learnhub-lms/settings/pages),
-  select **Deploy from a branch → `gh-pages` → `/(root)`** and save. The link
-  will be added after it is verified. This preview will not include API-backed
+  select **Deploy from a branch → `gh-pages` → `/(root)`** and save. The URL
+  will work after Pages is activated. This preview does not include API-backed
   authentication, courses, or student data.
 - **GitHub:** [Anji0522/learnhub-lms](https://github.com/Anji0522/learnhub-lms)
 
@@ -155,13 +156,13 @@ still browse and search the curriculum.
 ## Deployment Status
 
 The static curriculum workflow publishes built files to the `gh-pages` branch.
-GitHub Pages still returns 404 because a Pages site is not registered for this
+The preview URL is [https://anji0522.github.io/learnhub-lms/](https://anji0522.github.io/learnhub-lms/),
+but currently returns 404 because a Pages site is not registered for this
 repository. Configure **Settings → Pages → Build and deployment → Source:
 Deploy from a branch → Branch: `gh-pages` → Folder: `/(root)`**, then save.
-The workflow token cannot change this repository setting. The live link will
-be added after it is available and verified. The preview only demonstrates the
-frontend curriculum; API-backed authentication, course management, and saved
-student data require the full-stack deployment.
+The workflow token cannot change this repository setting. The preview only
+demonstrates the frontend curriculum; API-backed authentication, course
+management, and saved student data require the full-stack deployment.
 
 The full-stack app is not deployed. A MongoDB Atlas URI, Render and Vercel
 provider settings, assigned hosting URLs, and live API smoke tests are still
