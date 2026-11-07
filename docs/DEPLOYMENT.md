@@ -6,14 +6,12 @@ The repo includes a Render Blueprint (`render.yaml`) for the Express API and a V
 
 ## Static curriculum preview on GitHub Pages
 
-The `Deploy curriculum preview` GitHub Actions workflow builds the frontend
-with the repository base path and publishes the static files to the `gh-pages`
-branch. GitHub Pages still requires the repository owner to configure
-**Settings → Pages → Build and deployment → Source: Deploy from a branch →
-Branch: `gh-pages` → Folder: `/(root)`** and save. The workflow token cannot
-change this repository setting. Verify the public URL after activating Pages.
-This preview has no backend, database, authentication, or persisted student
-data.
+The `Deploy to GitHub Pages` workflow in `.github/workflows/deploy.yml` runs on
+pushes to `main` and can also be started manually. It builds the Vite frontend
+with the `/learnhub-lms/` base path, uploads `frontend/dist` as a Pages
+artifact, and deploys it. If Pages is not already enabled, configure
+**Settings → Pages → Build and deployment → Source: GitHub Actions**. The
+preview has no backend, database, authentication, or persisted student data.
 
 ## Publish the full-stack demo
 
